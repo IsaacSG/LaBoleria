@@ -22,9 +22,14 @@ export async function getClients(req, res) {
 
     try{
         const { rows: client, rowCount } = await connection.query(`
-        SELECT *
+        SELECT orders.id, orders.quantity, orders."createdAt", orders."totalPrice", cakes.name
         FROM clients
-        WHERE id = $1
+        JOIN orders
+        ON clients.id = orders."clientId"
+        JOIN cakes
+        ON orders."cakeId" = cakes.id
+        WHERE clients.id = $1
+        ORDER BY orders.id
         `, [id]);
 
         if (rowCount === 0) {

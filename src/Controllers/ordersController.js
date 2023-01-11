@@ -20,9 +20,13 @@ export async function postOrder(req, res) {
 export async function getOrders(req, res) {
 
     try{
-    const orders = await connection.query(`
-    SELECT *
-    FROM orders`)
+    const {rows: orders } = await connection.query(`
+    SELECT clients.id AS client_id, clients.name AS client_name, clients.address, clients.phone, cakes.*, orders.id AS order_id, orders."createdAt", orders.quantity, orders."totalPrice" FROM orders
+    JOIN clients
+    ON orders."clientId" = clients.id
+    JOIN cakes
+    ON orders."cakeId" = cakes.id
+    ORDER BY orders.id;`)
 
     res.status(200).send(orders);
     }
@@ -37,9 +41,12 @@ export async function getOrder(req, res) {
 
     try{
         const { rows: order, rowCount } = await connection.query(`
-        SELECT *
-        FROM orders
-        WHERE id = $1
+        SELECT clients.id AS client_id, clients.name AS client_name, clients.address, clients.phone, cakes.*, orders.id AS order_id, orders."createdAt", orders.quantity, orders."totalPrice" FROM orders
+        JOIN clients
+        ON orders."clientId" = clients.id
+        JOIN cakes
+        ON orders."cakeId" = cakes.id
+        WHERE orders.id = $1
         `, [id]);
 
         if(rowCount === 0) {

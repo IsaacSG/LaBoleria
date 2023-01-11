@@ -14,6 +14,9 @@ app.use(express.json());
 app.use(cakeRoute);
 app.use(clientRoute);
 app.use(orderRoute);
+app.get("/status", (req, res) => {
+    res.send("Ta vivo")
+});
 
 const PORT = process.env.PORT || 4000;
 
