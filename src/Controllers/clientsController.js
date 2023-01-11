@@ -32,11 +32,9 @@ export async function getClients(req, res) {
         ORDER BY orders.id
         `, [id]);
 
-        if (rowCount === 0) {
-            return res.status(404).send("Id não encontrado");
-        }
+        
 
-        res.status(200).send(client[0]);
+        res.status(200).send(client);
     }
 
     catch(error) {
